@@ -57,7 +57,6 @@ class VehicleResource extends Resource
         return [
             'index' => ListVehicles::route('/'),
             'create' => CreateVehicle::route('/create'),
-            'view' => ViewVehicle::route('/{record}'),
             'edit' => EditVehicle::route('/{record}/edit'),
         ];
     }

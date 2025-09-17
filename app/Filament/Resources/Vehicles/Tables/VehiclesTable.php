@@ -8,6 +8,11 @@ use Filament\Actions\DeleteAction;
 use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\EditAction;
 use Filament\Actions\ViewAction;
+use Filament\Infolists\Components\ImageEntry;
+use Filament\Infolists\Components\RepeatableEntry;
+use Filament\Infolists\Components\TextEntry;
+use Filament\Schemas\Components\Fieldset;
+use Filament\Schemas\Components\Tabs;
 use Filament\Tables\Columns\ImageColumn;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Filters\SelectFilter;
@@ -36,14 +41,12 @@ class VehiclesTable
                 TextColumn::make('year')
                     ->label('Año')
                     ->searchable(),
-                TextColumn::make('price')
-                    ->label('Precio')
-                    ->money('MXN')
-                    ->prefix('$')
-                    ->numeric()
-                    ->alignEnd()
+                TextColumn::make('versions_count')
+                    ->label('Versiones')
                     ->sortable()
-                    ->searchable(),
+                    ->alignEnd()
+                    ->counts('versions')
+                    ->toggleable(isToggledHiddenByDefault: false),
                 TextColumn::make('created_at')
                     ->label('Creado el')
                     ->dateTime()
@@ -64,7 +67,24 @@ class VehiclesTable
             ])
             ->recordActions([
                 ActionGroup::make([
-                    ViewAction::make(),
+                    ViewAction::make()
+                        ->schema([
+                            Fieldset::make('Detalles del modelo')
+                                ->columns(3)
+                                ->components([
+                                    TextEntry::make('category.name')->label('Categoría'),
+                                    TextEntry::make('name')->label('Modelo'),
+                                    TextEntry::make('year')->label('Año')
+                                ]),
+                            RepeatableEntry::make('versions')
+                                ->label('Versiones del modelo')
+                                ->columns(3)
+                                ->components([
+                                    TextEntry::make('name')->label('Versión'),
+                                    TextEntry::make('price')->label('Precio')->money('MXN'),
+                                    TextEntry::make('updated_at')->label('Ult. Actualización')->dateTime('d/m/Y, h:ia')
+                                ])
+                        ]),
                     EditAction::make(),
                     DeleteAction::make()
                 ])

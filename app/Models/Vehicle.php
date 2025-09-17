@@ -12,10 +12,11 @@ class Vehicle extends Model
         'name',
         'slug',
         'slug_byd',
-        'price',
         'cover',
         'banner',
-        'year'
+        'banner_attributes',
+        'year',
+        'technical_sheet',
     ];
 
     protected static function booted()
@@ -25,39 +26,58 @@ class Vehicle extends Model
         });
     }
 
-    public function getCoverLink () {
+    public function getCoverLink()
+    {
         return config('app.url') . '/storage/' . $this->cover;
     }
 
-    public function getBannerLink () {
+    public function getBannerLink()
+    {
         return config('app.url') . '/storage/' . $this->banner;
     }
 
-    public function getPriceFormat () {
-        return '$' . number_format($this->price, 0, '.', ',');
+    public function getBannerAttrLink()
+    {
+        return config('app.url') . '/storage/' . $this->banner_attributes;
+    }
+
+    public function getBestPrice()
+    {
+        $version = $this->versions()->orderBy('price')->first();
+        return $version ? $version->getPriceFormat() : "No definido";
     }
 
     /**
      * SECTION RELACIONES
      */
 
-    public function category() {
+    public function versions()
+    {
+        return $this->hasMany(VehicleVersion::class);
+    }
+
+    public function category()
+    {
         return $this->belongsTo(Category::class);
     }
 
-    public function settings() {
+    public function settings()
+    {
         return $this->hasMany(VehicleSetting::class);
     }
 
-    public function attributes() {
+    public function attributes()
+    {
         return $this->hasMany(VehicleAttribute::class);
     }
 
-    public function characteristics() {
+    public function characteristics()
+    {
         return $this->hasMany(VehicleCharacteristic::class);
     }
 
-    public function pictures() {
+    public function pictures()
+    {
         return $this->hasMany(VehiclePicture::class);
     }
 

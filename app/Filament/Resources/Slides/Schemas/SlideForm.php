@@ -23,7 +23,7 @@ class SlideForm
                     ->label('Imagen')
                     ->directory('slides')
                     ->imageEditor()
-                    ->imageCropAspectRatio('160:44')
+                    ->imageCropAspectRatio('144:60')
                     ->imageResizeUpscale()
                     ->columnSpanFull()
                     ->required()
@@ -74,7 +74,7 @@ class SlideForm
                         ->label('Finalizar el')
                         ->default(null),
                 ])
-                ->hidden(fn (Get $get) => !$get('programmable'))
+                    ->hidden(fn(Get $get) => !$get('programmable'))
             ]);
     }
 }

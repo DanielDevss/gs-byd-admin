@@ -4,8 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-return new class extends Migration
-{
+return new class extends Migration {
     /**
      * Run the migrations.
      */
@@ -17,9 +16,10 @@ return new class extends Migration
             $table->string('name', 191)->unique();
             $table->string('slug', 191)->unique();
             $table->string('slug_byd')->nullable();
-            $table->string('price', 10);
             $table->string('cover', 190);
             $table->string('banner', 190);
+            $table->string('banner_attributes', 190);
+            $table->string('technical_sheet', 190)->nullable();
             $table->char('year', 4);
             $table->timestamps();
         });
@@ -28,7 +28,7 @@ return new class extends Migration
             $table->id();
             $table->foreignId('vehicle_id')->constrained('vehicles')->references('id')->cascadeOnDelete();
             $table->string('name', 190)->nullable();
-            $table->string('text',255)->nullable();
+            $table->string('text', 255)->nullable();
             $table->enum('section', ['Exterior', 'Interior', 'Rines']);
             $table->string('icon', 190);
             $table->string('preview', 190);
@@ -44,7 +44,7 @@ return new class extends Migration
             $table->timestamps();
         });
 
-        Schema::create('vehicle_characteristics', function(Blueprint $table) {
+        Schema::create('vehicle_characteristics', function (Blueprint $table) {
             $table->id();
             $table->foreignId('vehicle_id')->constrained('vehicles')->references('id')->cascadeOnDelete();
             $table->string('title', 100);
@@ -58,7 +58,7 @@ return new class extends Migration
             $table->foreignId('vehicle_characteristic_id')->constrained('vehicle_characteristics')->references('id')->cascadeOnDelete();
             $table->string('title', 125);
             $table->text('text')->nullable();
-            $table->string('image',190)->nullable();
+            $table->string('image', 190)->nullable();
             $table->integer('position')->default(0);
             $table->timestamps();
         });
@@ -68,6 +68,14 @@ return new class extends Migration
             $table->foreignId('vehicle_id')->constrained('vehicles')->references('id')->cascadeOnDelete();
             $table->string('src', 190);
             $table->string('alt')->nullable();
+            $table->timestamps();
+        });
+
+        Schema::create('vehicle_versions', function (Blueprint $table) {
+            $table->id();
+            $table->foreignId('vehicle_id')->constrained('vehicles')->references('id')->cascadeOnDelete()->cascadeOnUpdate();
+            $table->string('name', 190)->unique();
+            $table->string('price', 20);
             $table->timestamps();
         });
 
@@ -84,5 +92,6 @@ return new class extends Migration
         Schema::dropIfExists('vehicle_characteristics');
         Schema::dropIfExists('vehicle_characteristic_elements');
         Schema::dropIfExists('vehicle_pictures');
+        Schema::dropIfExists('vehicle_versions');
     }
 };

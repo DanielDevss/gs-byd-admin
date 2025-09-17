@@ -8,8 +8,17 @@ class VehicleSetting extends Model
 {
     protected $fillable = ['vehicle_id', 'name', 'section', 'preview', 'icon', 'text'];
 
-    public function getFullSrc () {
+    public function getFullSrc()
+    {
         return config('app.url') . '/storage/' . $this->preview;
+    }
+
+    public function getBgIcon()
+    {
+        $base_path = config('app.url') . '/storage/';
+        return $this->section === 'Rines'
+            ? ['backgroundImage' => "url('$base_path{$this->icon}')"]
+            : ['background' => $this->icon];
     }
 
     /* SECTION RELACIONES */

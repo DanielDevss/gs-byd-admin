@@ -19,6 +19,7 @@ class SlidesTable
     public static function configure(Table $table): Table
     {
         return $table
+            ->reorderable('position')
             ->columns([
                 TextColumn::make('name')
                     ->label('Nombre')

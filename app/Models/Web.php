@@ -8,7 +8,13 @@ class Web extends Model
 {
     protected $fillable = ['web', 'app_key'];
 
-    public function slides() {
+    public function slides()
+    {
         return $this->belongsToMany(Slide::class, 'webs_slides');
+    }
+
+    public function emails()
+    {
+        return $this->belongsToMany(Email::class, 'emails_has_webs');
     }
 }

@@ -3,7 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Models\Vehicle;
+use App\Models\VehicleSetting;
 use Illuminate\Http\Request;
+use Illuminate\Support\Collection;
 
 class VehicleController extends Controller
 {
@@ -16,7 +18,7 @@ class VehicleController extends Controller
                 'category_id' => $vehicle->category_id,
                 'slug' => $vehicle->slug,
                 'title' => $vehicle->name,
-                'price' => $vehicle->getPriceFormat(),
+                'price' => $vehicle->getBestPrice(),
                 'cover' => $vehicle->getCoverLink()
             ]);
 
@@ -34,19 +36,29 @@ class VehicleController extends Controller
         $vehicle_format['name'] = $vehicle->name;
         $vehicle_format['year'] = $vehicle->year;
         $vehicle_format['price'] = $vehicle->getPriceFormat();
-        $vehicle_format['banner'] = $vehicle->getCoverLink();
+        $vehicle_format['banner'] = $vehicle->getBannerLink();
+        $vehicle_format['banner_attributes'] = $vehicle->getBannerAttrLink();
 
-        $vehicle_format['customs'] = $vehicle->settings()->get()
-            ->groupBy('section')
-            ->map(fn ($el) => [
-                'name' => $el->name,
-                'text' => $el->text,
-                'preview' => $el->getFullSrc*
-            ])
-            ->values();
+
+        // settings
+        $sections = ['Exterior', 'Interior', 'Rines'];
+
+        $grouped = $vehicle->settings->groupBy('section');
+        $vehicle_format['settings'] = collect($sections)->map(function (string $type) use ($grouped) {
+            $items = ($grouped->get($type) ?? collect())->map(fn($s) => [
+                'name' => $s->name,
+                'icon' => $s->getBgIcon(),
+                'preview' => $s->getFullSrc()
+            ])->values();
+
+            return [
+                'type' => $type,
+                'settings' => $items
+            ];
+        })->values();
 
         // atributos
-        $vehicle_format['attributos'] = $vehicle
+        $vehicle_format['attributes'] = $vehicle
             ->attributes()
             ->select('id', 'title', 'description')
             ->orderBy('position')
@@ -68,7 +80,7 @@ class VehicleController extends Controller
                 'id' => $el->id,
                 'title' => $el->title,
                 'text' => $el->text,
-                'elements' => $el->elements  // ya viene ordenado
+                'elements' => $el->elements
                     ->map(fn($sub) => [
                         'id' => $sub->id,
                         'title' => $sub->title,
@@ -80,7 +92,7 @@ class VehicleController extends Controller
             ->values();
 
         // Galeria
-        $vehicle_format['gallery'] = $vehicle->pictures()->get()->map(fn($img, $vehicle) => [
+        $vehicle_format['gallery'] = $vehicle->pictures()->get()->map(fn($img) => [
             'id' => $img->id,
             'src' => $img->getFullSrc(),
             'alt' => $img->alt

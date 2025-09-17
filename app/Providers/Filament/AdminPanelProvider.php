@@ -2,6 +2,7 @@
 
 namespace App\Providers\Filament;
 
+use Filament\Enums\ThemeMode;
 use Filament\Http\Middleware\Authenticate;
 use Filament\Http\Middleware\AuthenticateSession;
 use Filament\Http\Middleware\DisableBladeIconComponents;
@@ -28,6 +29,11 @@ class AdminPanelProvider extends PanelProvider
             ->id('admin')
             ->path('/')
             ->login()
+            ->darkMode()
+            ->brandLogo(asset('images/byd-brand.svg'))
+            ->darkModeBrandLogo(asset('images/byd-brand-dark.svg'))
+            ->brandLogoHeight(60)
+            ->defaultThemeMode(ThemeMode::Dark)
             ->colors([
                 'primary' => Color::Blue,
             ])
