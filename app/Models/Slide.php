@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Enum\SlideStatus;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Carbon;
@@ -11,7 +12,6 @@ class Slide extends Model
     protected $fillable = ['position', 'name', 'src', 'alt', 'url', 'section', 'programmable', 'status', 'published_at', 'finished_at'];
 
     protected $casts = [
-        'programmable' => 'bool',
         'published_at' => 'datetime',
         'finished_at' => 'datetime',
     ];
@@ -28,7 +28,8 @@ class Slide extends Model
             ->where(function (Builder $q) use ($now) {
                 $q->whereNull('finished_at')       // sin fin => sigue disponible
                     ->orWhere('finished_at', '>=', $now);
-            });
+            })
+            ->orWhere('status', SlideStatus::PUBLISHED->value);
     }
 
     public function getFullSrc()

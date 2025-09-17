@@ -30,9 +30,8 @@ class AdminPanelProvider extends PanelProvider
             ->path('/')
             ->login()
             ->darkMode()
-            ->brandLogo(asset('images/byd-brand.svg'))
-            ->darkModeBrandLogo(asset('images/byd-brand-dark.svg'))
-            ->brandLogoHeight(60)
+            ->brandLogo(asset('images/byd.png'))
+            ->darkModeBrandLogo(asset('images/byd-dark.png'))
             ->defaultThemeMode(ThemeMode::Dark)
             ->colors([
                 'primary' => Color::Blue,

@@ -36,6 +36,11 @@ class Vehicle extends Model
         return config('app.url') . '/storage/' . $this->banner;
     }
 
+    public function getTechnicalSheet()
+    {
+        return config('app.url') . '/storage/' . $this->technical_sheet;
+    }
+
     public function getBannerAttrLink()
     {
         return config('app.url') . '/storage/' . $this->banner_attributes;

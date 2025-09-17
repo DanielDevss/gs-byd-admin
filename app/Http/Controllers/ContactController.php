@@ -8,6 +8,7 @@ use App\Enum\SentType;
 use App\Mail\ContactMail;
 use App\Models\Email;
 use App\Models\Vehicle;
+use App\Models\VehicleVersion;
 use App\Models\Web;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
@@ -16,17 +17,26 @@ use Illuminate\Validation\Rules\Enum;
 
 class ContactController extends Controller
 {
+
+    /* ----------------------------- Otros contactos ---------------------------- */
+
     public function sendContact(Request $request, ContactType $type)
     {
         $appkey = $request->appkey;
 
         if (!$appkey) {
+            Log::warning("No se recibio el uuid", [
+                'request' => $request->all()
+            ]);
             return abort(403);
         }
 
         $web = Web::firstWhere('app_key', $appkey);
 
         if (!$web) {
+            Log::warning("No se encontro la web",[
+                "uuid" => $appkey
+            ]);
             return abort(403);
         }
 
@@ -37,14 +47,21 @@ class ContactController extends Controller
                 'phone' => 'required|string',
                 'contact_preference' => ['required', new Enum(ContactPreference::class)],
                 'message' => 'nullable|string',
-                'vehicle' => 'nullable|exists:vehicles,id'
+                'vehicle' => 'nullable|exists:vehicles,id',
+                'version' => 'nullable|exists:vehicle_versions,id',
             ]);
 
             $vehicle = null;
+            $version = null;
+
             $contactPreference = ContactPreference::from($request->contact_preference);
 
             if ($request->vehicle) {
                 $vehicle = Vehicle::find($request->vehicle);
+            }
+
+            if ($request->version) {
+                $version = VehicleVersion::find($request->version);
             }
 
             $mailesTo = Email::getAvailableWebForm($appkey, $type->value)->pluck('email');
@@ -66,6 +83,7 @@ class ContactController extends Controller
                     $request->message,
                     $contactPreference,
                     $vehicle,
+                    $version,
                     $web->web,
                     $mailesCc,
                     $mailesBcc
@@ -81,11 +99,13 @@ class ContactController extends Controller
             ], 200);
 
         } catch (\Exception $err) {
+            
             Log::error('Ocurrio un error al enviar un correo de contacto', [
                 'error' => $err->getMessage(),
                 'section' => $type,
                 'appkey' => $appkey
             ]);
+            
             return response()->json([
                 'sended' => false,
                 'error' => $err->getMessage()

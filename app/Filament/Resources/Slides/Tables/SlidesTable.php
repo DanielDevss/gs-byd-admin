@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources\Slides\Tables;
 
+use App\Enum\SlideStatus;
 use Filament\Actions\ActionGroup;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteAction;
@@ -28,14 +29,18 @@ class SlidesTable
                     ->label('Slide')
                     ->openUrlInNewTab()
                     ->toggleable(),
-                IconColumn::make('programmable')
-                    ->label('Programable')
-                    ->falseIcon(Phosphor::Prohibit)
-                    ->trueIcon(Phosphor::Alarm)
-                    ->alignCenter()
-                    ->boolean(),
                 TextColumn::make('status')
-                    ->badge(),
+                    ->badge()
+                    ->color(fn ($state) => match($state) {
+                        SlideStatus::PUBLISHED->value => SlideStatus::PUBLISHED->color(),
+                        SlideStatus::INACTIVE->value => SlideStatus::INACTIVE->color(),
+                        SlideStatus::SCHEDULED->value => SlideStatus::SCHEDULED->color(),
+                    })
+                    ->icon(fn ($state) => match($state) {
+                        SlideStatus::PUBLISHED->value => SlideStatus::PUBLISHED->icon(),
+                        SlideStatus::INACTIVE->value => SlideStatus::INACTIVE->icon(),
+                        SlideStatus::SCHEDULED->value => SlideStatus::SCHEDULED->icon(),
+                    }),
                 TextColumn::make('published_at')
                     ->label('Publicado el')
                     ->dateTime('d/m/Y, h:i a')

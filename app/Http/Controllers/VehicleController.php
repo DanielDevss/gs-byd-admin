@@ -11,7 +11,7 @@ class VehicleController extends Controller
 {
     public function index()
     {
-        $vehicles = Vehicle::select('id', 'category_id', 'name', 'price', 'slug', 'cover')
+        $vehicles = Vehicle::select('id', 'category_id', 'name', 'slug', 'cover')
             ->get()
             ->map(fn(Vehicle $vehicle) => [
                 'id' => $vehicle->id,
@@ -19,7 +19,7 @@ class VehicleController extends Controller
                 'slug' => $vehicle->slug,
                 'title' => $vehicle->name,
                 'price' => $vehicle->getBestPrice(),
-                'cover' => $vehicle->getCoverLink()
+                'cover' => $vehicle->getCoverLink(),
             ]);
 
         return response()->json($vehicles);
@@ -35,10 +35,10 @@ class VehicleController extends Controller
         $vehicle_format['id'] = $vehicle->id;
         $vehicle_format['name'] = $vehicle->name;
         $vehicle_format['year'] = $vehicle->year;
-        $vehicle_format['price'] = $vehicle->getPriceFormat();
+        $vehicle_format['price'] = $vehicle->getBestPrice();
         $vehicle_format['banner'] = $vehicle->getBannerLink();
         $vehicle_format['banner_attributes'] = $vehicle->getBannerAttrLink();
-
+        $vehicle_format['technical_sheet'] = $vehicle->getTechnicalSheet();
 
         // settings
         $sections = ['Exterior', 'Interior', 'Rines'];
@@ -57,7 +57,7 @@ class VehicleController extends Controller
             ];
         })->values();
 
-        // atributos
+        // Atributos
         $vehicle_format['attributes'] = $vehicle
             ->attributes()
             ->select('id', 'title', 'description')
@@ -69,6 +69,7 @@ class VehicleController extends Controller
                 'text' => $attr->description
             ]);
 
+        // Caracteristicas
         $vehicle_format['characteristics'] = $vehicle
             ->characteristics()
             ->with([
@@ -91,6 +92,13 @@ class VehicleController extends Controller
             ])
             ->values();
 
+        // Versiones
+        $vehicle_format['versions'] = $vehicle->versions()->get()->map(fn ($version) => [
+            'id' => $version->id,
+            'version' => $version->name,
+            'price' => $version->getPriceFormat()
+        ]);
+
         // Galeria
         $vehicle_format['gallery'] = $vehicle->pictures()->get()->map(fn($img) => [
             'id' => $img->id,
@@ -104,4 +112,5 @@ class VehicleController extends Controller
 
         return response()->json($vehicle_format);
     }
+
 }

@@ -5,6 +5,7 @@ namespace App\Mail;
 use App\Enum\ContactPreference;
 use App\Enum\ContactType;
 use App\Models\Vehicle;
+use App\Models\VehicleVersion;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;
@@ -25,6 +26,7 @@ class ContactMail extends Mailable
     public ContactPreference $contactPreference;
     public ?string $textMessage;
     public ?Vehicle $vehicle;
+    public ?VehicleVersion $version;
     public string $locationName;
     private array $mailsCc = [];
     private array $mailsBcc = [];
@@ -40,6 +42,7 @@ class ContactMail extends Mailable
         ?string $message = null,
         ?ContactPreference $contactPreference = ContactPreference::WHATSAPP,
         ?Vehicle $vehicle = null,
+        ?VehicleVersion $version = null,
         string $locationName,
         array $cc = [],
         array $bcc = []
@@ -52,6 +55,7 @@ class ContactMail extends Mailable
         $this->contactPreference = $contactPreference;
         $this->textMessage = $message;
         $this->vehicle = $vehicle;
+        $this->version = $version;
         $this->preheader = "{$this->name}, quiere ser contactado por {$this->contactPreference->value}.";
         $this->locationName = $locationName;
         $this->mailsCc = $cc;

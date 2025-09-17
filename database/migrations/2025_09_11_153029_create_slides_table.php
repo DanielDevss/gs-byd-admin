@@ -18,8 +18,7 @@ return new class extends Migration {
             $table->string('alt', 190)->nullable();
             $table->string('url', 255)->nullable();
             $table->enum('section', ['Main', 'Modelo']);
-            $table->boolean('programmable')->default(0);
-            $table->enum('status', ['Publicado', 'Inactivo'])->default('Publicado');
+            $table->enum('status', ['Publicado', 'Inactivo', 'Programado'])->default('Publicado');
             $table->timestamp('published_at')->nullable();
             $table->timestamp('finished_at')->nullable();
             $table->timestamps();

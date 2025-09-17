@@ -6,5 +6,5 @@ enum ContactPreference: string
 {
     case WHATSAPP = 'WhatsApp';
     case CALL = 'Llamada';
-    case EMAIL = 'Correo electrónico';
+    case EMAIL = 'Correo Electrónico';
 }

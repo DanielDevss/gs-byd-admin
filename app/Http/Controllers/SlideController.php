@@ -22,6 +22,7 @@ class SlideController extends Controller
         $slides = $web
             ->slides()
             ->orderBy('position')
+            ->available()
             ->get()
             ->map(fn($slide) => [
                 'id' => $slide->id,

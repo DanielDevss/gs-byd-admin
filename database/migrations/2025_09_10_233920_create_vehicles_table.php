@@ -86,12 +86,13 @@ return new class extends Migration {
      */
     public function down(): void
     {
-        Schema::dropIfExists('vehicles');
         Schema::dropIfExists('vehicle_settings');
         Schema::dropIfExists('vehicle_attributes');
-        Schema::dropIfExists('vehicle_characteristics');
-        Schema::dropIfExists('vehicle_characteristic_elements');
         Schema::dropIfExists('vehicle_pictures');
+        Schema::dropIfExists('vehicle_characteristic_elements');
+        Schema::dropIfExists('vehicle_characteristics');
         Schema::dropIfExists('vehicle_versions');
+        Schema::dropIfExists('vehicles');
+
     }
 };

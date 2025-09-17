@@ -44,7 +44,12 @@
   <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="background:#0B1220;">
     <tr>
       <td align="center" style="padding:24px;">
-        <img src="https://gruposolana.com/solana/public/images/solana-w.png" width="200px" style="margin: auto; margin-bottom:10px;width:200px" />
+        <img 
+          src="https://gruposolana.com/solana/public/images/solana-w.png"
+          width="200"
+          alt="Grupo Solana"
+          style="display:block; margin:0 auto 10px auto; border:0; outline:none; text-decoration:none; width:200px; height:auto;"
+        />
         <!-- Contenedor -->
         <table role="presentation" width="640" cellpadding="0" cellspacing="0" border="0" class="container" style="width:640px; max-width:640px; background:#FFFFFF; border-radius:12px; overflow:hidden; border:1px solid #E6EEF5;">
           <!-- Barra superior (brand) -->

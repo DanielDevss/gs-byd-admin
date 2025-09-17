@@ -83,7 +83,7 @@ class SettingsRelationManager extends RelationManager
                     ->image()
                     ->visibility('public')
                     ->imageEditor()
-                    ->imageCropAspectRatio('6:4')
+                    ->imageCropAspectRatio('144:60')
                     ->required()
                     ->openable()
                     ->downloadable(),

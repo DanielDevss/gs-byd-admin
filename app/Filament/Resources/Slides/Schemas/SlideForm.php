@@ -2,12 +2,14 @@
 
 namespace App\Filament\Resources\Slides\Schemas;
 
+use App\Enum\SlideStatus;
 use Filament\Forms\Components\CheckboxList;
 use Filament\Forms\Components\DateTimePicker;
 use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Toggle;
+use Filament\Forms\Components\ToggleButtons;
 use Filament\Schemas\Components\Fieldset;
 use Filament\Schemas\Components\Utilities\Get;
 use Filament\Schemas\Schema;
@@ -49,22 +51,30 @@ class SlideForm
                     ->options(['Main' => 'Main', 'Modelo' => 'Modelo'])
                     ->default('Main')
                     ->required(),
-                Select::make('status')
-                    ->options(['Publicado' => 'Publicar', 'Inactivo' => 'Borrador'])
-                    ->default('Publicado')
-                    ->required(),
+                ToggleButtons::make('status')
+                    ->label("Estado del slide")
+                    ->colors([
+                        SlideStatus::PUBLISHED->value => SlideStatus::PUBLISHED->color(),
+                        SlideStatus::SCHEDULED->value => SlideStatus::SCHEDULED->color(),
+                        SlideStatus::INACTIVE->value => SlideStatus::INACTIVE->color(),
+                    ])
+                    ->icons([
+                        SlideStatus::PUBLISHED->value => SlideStatus::PUBLISHED->icon(),
+                        SlideStatus::SCHEDULED->value => SlideStatus::SCHEDULED->icon(),
+                        SlideStatus::INACTIVE->value => SlideStatus::INACTIVE->icon(),
+                    ])
+                    ->options([
+                        SlideStatus::PUBLISHED->value => SlideStatus::PUBLISHED->label(),
+                        SlideStatus::SCHEDULED->value => SlideStatus::SCHEDULED->label(),
+                        SlideStatus::INACTIVE->value => SlideStatus::INACTIVE->label(),
+                    ])
+                    ->inline()
+                    ->live(),
                 CheckboxList::make('webs')
                     ->label('Mostrar en las siguientes webs')
                     ->bulkToggleable()
                     ->helperText('Marca en las casillas donde quieres que se vea este slide')
                     ->relationship('webs', 'web'),
-                Toggle::make('programmable')
-                    ->label('Activa para programar el slide')
-                    ->onIcon(Phosphor::Alarm)
-                    ->offIcon(Phosphor::Prohibit)
-                    ->default(0)
-                    ->required()
-                    ->live(),
                 Fieldset::make('Programación')->components([
                     DateTimePicker::make('published_at')
                         ->label('Publicar el')
@@ -74,7 +84,7 @@ class SlideForm
                         ->label('Finalizar el')
                         ->default(null),
                 ])
-                    ->hidden(fn(Get $get) => !$get('programmable'))
+                    ->hidden(fn(Get $get) => $get('status') !== SlideStatus::SCHEDULED->value)
             ]);
     }
 }

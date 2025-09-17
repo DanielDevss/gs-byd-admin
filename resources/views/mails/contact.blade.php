@@ -39,6 +39,16 @@
             <td style="background:#f9fafb; border:1px solid #e5e7eb;"><strong>Año del modelo</strong></td>
             <td style="border:1px solid #e5e7eb;">{{ $vehicle->year }}</td>
         </tr>
+        @if($version)
+        <tr>
+            <td style="background:#f9fafb; border:1px solid #e5e7eb;"><strong>Versión</strong></td>
+            <td style="border:1px solid #e5e7eb;">{{ $version->name }}</td>
+        </tr>
+        <tr>
+            <td style="background:#f9fafb; border:1px solid #e5e7eb;"><strong>Precio web</strong></td>
+            <td style="border:1px solid #e5e7eb;">{{ $version->getPriceFormat() }}</td>
+        </tr>
+        @endif
         <tr>
             <td style="background:#f9fafb; border:1px solid #e5e7eb;"><strong>Enlace del modelo</strong></td>
             <td style="border:1px solid #e5e7eb;">
@@ -47,7 +57,7 @@
         </tr>
     </table>
     @endif
-
+    
     <p style="margin:16px 0 0; font-family:Arial, Helvetica, sans-serif; font-size:13px; color:#64748b;">
         Por favor, da seguimiento a la brevedad.
     </p>

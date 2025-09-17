@@ -5,6 +5,7 @@ namespace Database\Seeders;
 use App\Models\Category;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\Log;
 
 class CategorySeeder extends Seeder
 {
@@ -15,8 +16,15 @@ class CategorySeeder extends Seeder
     {
         $categories = ['Eléctricos', 'Hibridos Enchufables'];
 
-        foreach ($categories as $category) {
-            Category::createOrFirst(['name' => $category], ['name' => $category]);
+        try {
+            foreach ($categories as $category) {
+                Category::createOrFirst(['name' => $category], ['name' => $category]);
+            }
+            Log::info('Categorias insertadas en la Base de datos');
+        } catch (\Exception $err) {
+            Log::info('Algo fallo al insertar las categorias', [
+                'error' => $err->getMessage()
+            ]);
         }
     }
 }
