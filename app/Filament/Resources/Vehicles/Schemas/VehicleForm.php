@@ -42,6 +42,7 @@ class VehicleForm
                             FileUpload::make('technical_sheet')
                                 ->label('Ficha técnica')
                                 ->downloadable()
+                                ->maxSize(250000)
                                 ->openable()
                                 ->acceptedFileTypes(['application/pdf'])
                                 ->helperText('Sube el PDF de la ficha técnica del modelo')
